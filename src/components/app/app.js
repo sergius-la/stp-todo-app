@@ -2,6 +2,7 @@ import React from 'react'
 import AppHeader from '../../components/app-header'
 import SearchInput from '../../components/search-input/search-input'
 import ToDoList from '../../components/todo-list/todo-list'
+import ItemStatusFilter from '../../components/item-status-filter/item-status-filter'
 
 import './app.css';
 
@@ -16,11 +17,14 @@ const App = () => {
   return (
     <div className="todo-app">
       <AppHeader toDo={1} done={3} />
-
       <div className="top-panel d-flex">
         <SearchInput />
+        <ItemStatusFilter/>
       </div>
-      <ToDoList todos={todoData} />
+      <ToDoList
+      todos={todoData}
+      onDeleted={(id) => console.log(`Delete ${id}`)}
+      />
     </div>
   );
 }
