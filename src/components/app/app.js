@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import AppHeader from '../../components/app-header'
 import SearchInput from '../../components/search-input/search-input'
 import ToDoList from '../../components/todo-list/todo-list'
@@ -6,27 +6,40 @@ import ItemStatusFilter from '../../components/item-status-filter/item-status-fi
 
 import './app.css';
 
-const App = () => {
+export default class App extends Component {
 
-  const todoData = [
-    { label: 'Drink Coffee', important: false, id: 1 },
-    { label: 'Make Awesome App', important: true, id: 2 },
-    { label: 'Have a lunch', important: false, id: 3 },
-  ]
+  state = {
+    todos: [
+      { label: 'Drink Coffee', important: false, id: 1 },
+      { label: 'Make Awesome App', important: true, id: 2 },
+      { label: 'Have a lunch', important: false, id: 3 },
+    ]
+  }
 
-  return (
-    <div className="todo-app">
-      <AppHeader toDo={1} done={3} />
-      <div className="top-panel d-flex">
-        <SearchInput />
-        <ItemStatusFilter/>
+  deleteItem = (id) => {
+    console.log(`Delete ${id}`)
+    this.setState(({ todos }) => {
+      const index = todos.findIndex((item) => item.id === id)
+      return {
+        // React state should be treated as immutable.
+        todos: [...todos.slice(0, index), ...todos.slice(index + 1)]
+      }
+    })
+  }
+
+  render() {
+    return (
+      <div className="todo-app">
+        <AppHeader toDo={1} done={3} />
+        <div className="top-panel d-flex">
+          <SearchInput />
+          <ItemStatusFilter />
+        </div>
+        <ToDoList
+          todos={this.state.todos}
+          onDeleted={(id) => this.deleteItem(id)}
+        />
       </div>
-      <ToDoList
-      todos={todoData}
-      onDeleted={(id) => console.log(`Delete ${id}`)}
-      />
-    </div>
-  );
+    );
+  }
 }
-
-export default App;
