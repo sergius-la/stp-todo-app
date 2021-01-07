@@ -32,13 +32,22 @@ export default class App extends Component {
     const ids = this.state.todos.map(function(item) {
       return item.id
     })
-    
+
     this.setState(({todos}) => {
       return {
         todos: [...todos, {label: text, important: false, id: Math.max(...ids) + 1}]
       }
     })
   }
+
+  onToggleImportant = (id) => {
+    console.log(`Toggle Important on ${id}`)
+    
+  }
+
+  onToggleDone = (id) => {
+    console.log(`Toggle Done on ${id}`)
+  };
 
   render() {
     return (
@@ -51,6 +60,8 @@ export default class App extends Component {
         <ToDoList
           todos={this.state.todos}
           onDeleted={(id) => this.deleteItem(id)}
+          onToggleImportant={(id) => this.onToggleImportant(id)}
+          onToggleDone={(id) => this.onToggleDone(id)}
         />
         <ItemAddForm onItemAdded={(text) => this.addItem(text)}/>
       </div>
