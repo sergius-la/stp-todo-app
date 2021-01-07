@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component} from 'react'
 import AppHeader from '../../components/app-header'
 import SearchInput from '../../components/search-input/search-input'
 import ToDoList from '../../components/todo-list/todo-list'
 import ItemStatusFilter from '../../components/item-status-filter/item-status-filter'
+import ItemAddForm from './item-add-form'
 
 import './app.css';
 
@@ -27,6 +28,18 @@ export default class App extends Component {
     })
   }
 
+  addItem = (text) => {
+    const ids = this.state.todos.map(function(item) {
+      return item.id
+    })
+    
+    this.setState(({todos}) => {
+      return {
+        todos: [...todos, {label: text, important: false, id: Math.max(...ids) + 1}]
+      }
+    })
+  }
+
   render() {
     return (
       <div className="todo-app">
@@ -39,6 +52,7 @@ export default class App extends Component {
           todos={this.state.todos}
           onDeleted={(id) => this.deleteItem(id)}
         />
+        <ItemAddForm onItemAdded={(text) => this.addItem(text)}/>
       </div>
     );
   }
