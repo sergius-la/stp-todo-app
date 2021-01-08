@@ -1,4 +1,4 @@
-import React, { Component} from 'react'
+import React, { Component } from 'react'
 import AppHeader from '../../components/app-header'
 import SearchInput from '../../components/search-input/search-input'
 import ToDoList from '../../components/todo-list/todo-list'
@@ -9,12 +9,18 @@ import './app.css';
 
 export default class App extends Component {
 
+  itemId = 1
+
   state = {
     todos: [
-      { label: 'Drink Coffee', important: false, id: 1 },
-      { label: 'Make Awesome App', important: true, id: 2 },
-      { label: 'Have a lunch', important: false, id: 3 },
+      this.createTodoItem('Drink Coffee'),
+      this.createTodoItem('Make Awesome App'),
+      this.createTodoItem('Have a lunch')
     ]
+  }
+
+  createTodoItem(label) {
+    return { label: label, done: false, important: false, id: this.itemId++ }
   }
 
   deleteItem = (id) => {
@@ -29,24 +35,36 @@ export default class App extends Component {
   }
 
   addItem = (text) => {
-    const ids = this.state.todos.map(function(item) {
-      return item.id
-    })
-
-    this.setState(({todos}) => {
+    this.setState(({ todos }) => {
       return {
-        todos: [...todos, {label: text, important: false, id: Math.max(...ids) + 1}]
+        todos: [...todos, this.createTodoItem(text)]
       }
     })
   }
 
+  // Update object in the state
   onToggleImportant = (id) => {
     console.log(`Toggle Important on ${id}`)
-    
+    this.setState(({todos}) => {
+      const index = todos.findIndex((item) => item.id === id)
+      const oldItem = todos[index]
+      const newItem = {...oldItem, important: !oldItem.important}
+      return {
+        todos: [...todos.slice(0, index), newItem, ...todos.slice(index + 1)]
+      }
+    })
   }
 
   onToggleDone = (id) => {
     console.log(`Toggle Done on ${id}`)
+    this.setState(({todos}) => {
+      const index = todos.findIndex((item) => item.id === id)
+      const oldItem = todos[index]
+      const newItem = {...oldItem, done: !oldItem.done}
+      return {
+        todos: [...todos.slice(0, index), newItem, ...todos.slice(index + 1)]
+      }
+    })
   };
 
   render() {
@@ -63,7 +81,7 @@ export default class App extends Component {
           onToggleImportant={(id) => this.onToggleImportant(id)}
           onToggleDone={(id) => this.onToggleDone(id)}
         />
-        <ItemAddForm onItemAdded={(text) => this.addItem(text)}/>
+        <ItemAddForm onItemAdded={(text) => this.addItem(text)} />
       </div>
     );
   }
