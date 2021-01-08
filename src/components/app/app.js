@@ -17,7 +17,8 @@ export default class App extends Component {
       this.createTodoItem('Make Awesome App'),
       this.createTodoItem('Have a lunch')
     ],
-    term: ''
+    term: '', // Search value
+    filter: 'all' // all, active, done
   }
 
   createTodoItem(label) {
@@ -30,6 +31,19 @@ export default class App extends Component {
     }
 
     return todos.filter((item) => item.label.includes(term))
+  }
+
+  filter(todos, filter) {
+    switch (filter) {
+      case 'all':
+        return todos;
+      case 'active':
+        return todos.filter((item) => !item.done)
+      case 'done':
+        return todos.filter((item) => item.done)
+      default:
+        return todos
+    }
   }
 
   deleteItem = (id) => {
@@ -54,10 +68,10 @@ export default class App extends Component {
   // Update object in the state
   onToggleImportant = (id) => {
     console.log(`Toggle Important on ${id}`)
-    this.setState(({todos}) => {
+    this.setState(({ todos }) => {
       const index = todos.findIndex((item) => item.id === id)
       const oldItem = todos[index]
-      const newItem = {...oldItem, important: !oldItem.important}
+      const newItem = { ...oldItem, important: !oldItem.important }
       return {
         todos: [...todos.slice(0, index), newItem, ...todos.slice(index + 1)]
       }
@@ -66,10 +80,10 @@ export default class App extends Component {
 
   onToggleDone = (id) => {
     console.log(`Toggle Done on ${id}`)
-    this.setState(({todos}) => {
+    this.setState(({ todos }) => {
       const index = todos.findIndex((item) => item.id === id)
       const oldItem = todos[index]
-      const newItem = {...oldItem, done: !oldItem.done}
+      const newItem = { ...oldItem, done: !oldItem.done }
       return {
         todos: [...todos.slice(0, index), newItem, ...todos.slice(index + 1)]
       }
@@ -77,20 +91,27 @@ export default class App extends Component {
   };
 
   onSearchChange = (term) => {
-    this.setState({term})
+    this.setState({ term })
+  }
+
+  onFilterChange = (filter) => {
+    this.setState({filter})
   }
 
   render() {
 
-    const {todos, term} = this.state;
-    const visibleItems = this.search(todos, term)
+    const { todos, term, filter } = this.state;
+    const visibleItems = this.filter(
+      this.search(todos, term), filter)
 
     return (
       <div className="todo-app">
         <AppHeader todos={this.state.todos} />
         <div className="top-panel d-flex">
-          <SearchInput onSearchChange={this.onSearchChange}/>
-          <ItemStatusFilter />
+          <SearchInput onSearchChange={this.onSearchChange} />
+          <ItemStatusFilter
+            filter={filter}
+            onFilterChange={this.onFilterChange} />
         </div>
         <ToDoList
           todos={visibleItems}
