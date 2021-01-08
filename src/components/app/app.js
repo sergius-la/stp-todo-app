@@ -3,7 +3,7 @@ import AppHeader from '../../components/app-header'
 import SearchInput from '../../components/search-input/search-input'
 import ToDoList from '../../components/todo-list/todo-list'
 import ItemStatusFilter from '../../components/item-status-filter/item-status-filter'
-import ItemAddForm from './item-add-form'
+import ItemAddForm from '../item-add-form'
 
 import './app.css';
 
