@@ -14,7 +14,7 @@ export default class App extends Component {
   state = {
     todos: [
       this.createTodoItem('Drink Coffee'),
-      this.createTodoItem('Make Awesome App'),
+      this.createTodoItem('Make App'),
       this.createTodoItem('Have a lunch')
     ],
     term: '', // Search value
